@@ -1,7 +1,7 @@
 {
-  "name": "discord-bot",
+  "name": "pokeren-bot",
   "version": "1.0.0",
-  "description": "A discord bot",
+  "description": "Discord bot for pokeren.nl - Created with Node.js and Discord.js",
   "main": "bot.js",
   "dependencies": {
     "discord.js": "^11.4.2",
