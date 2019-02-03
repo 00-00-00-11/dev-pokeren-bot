@@ -13,10 +13,6 @@ exports.get_all = (req, res, next) => {
 			'/': 'Returns a list of all tempmutes.',
 			'/:user_id': 'Return all tempmutes for that user.'
 		},
-		'/levels': {
-			'/': 'Returns a list of all user levels.',
-			'/:user_id': 'Returns level for that user.'
-		},
 		'/discordUsers': {
 			'/': 'Returns a list of all users currently in database.',
 			'/:user_id': 'Returns information for that user.'
