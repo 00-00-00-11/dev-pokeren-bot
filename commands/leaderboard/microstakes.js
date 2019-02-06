@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const config = require('../config.json');
-const Highstake = require('../models/highstakes-top');
+const config = require('../../config.json');
+const Microstake = require('../../models/leaderboard/microstakes');
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URL_1 + process.env.MONGODB_PASS + process.env.MONGODB_URL_2, {
@@ -20,14 +20,14 @@ function addCommas(nStr) {
 }
 
 module.exports.run = async (bot, message, args) => {
-	let addHigh = args.shift();
+	let addMicro = args.shift();
 	let dateWon = args.pop();
 	let winningsAmount = args.pop();
 	let playerName = args.shift();
 	let pokerClient = args.shift();
 	let tournamentName = args.join(' ');
 
-	if (addHigh === 'add') {
+	if (addMicro === 'add') {
 		if (!playerName || !pokerClient || !tournamentName || !winningsAmount || !dateWon)
 			return message.channel.send('Missing fields or incorrect format.');
 
@@ -36,49 +36,58 @@ module.exports.run = async (bot, message, args) => {
 
 		winningsAmount = winningsAmount.replace('$', '').replace('€', '').replace('£', '').replace(',', '');
 
-		Highstake.create((err, micro) => {
+		Microstake.create((err, micro) => {
 			if (err) console.log(err);
 			if (!micro) {
-				const newHighstake = new Highstake({
+				const newMicrostake = new Microstake({
 					_id: mongoose.Types.ObjectId(),
 					player_name: playerName,
 					poker_client: pokerClient,
 					tournament_name: tournamentName,
 					winnings: winningsAmount,
 					date_won: dateWon,
-					stake: 'Highstake',
+					stake: 'Microstake',
 					timestamp_added: message.createdTimestamp
 				});
-				newHighstake.save();
-				message.channel.send('Highstakes added.');
+				newMicrostake.save();
+				message.channel.send('Microstakes added.');
 			}
 		});
 	} else {
-		Highstake.find({ stake: 'Highstake' }).sort([ [ 'winnings', 'descending' ] ]).exec((err, res) => {
+		Microstake.find({ stake: 'Microstake' }).sort([ [ 'winnings', 'descending' ] ]).exec((err, res) => {
 			if (err) console.log(err);
 
-			let highstakeEmbed = new Discord.RichEmbed().setTitle(`${message.guild.name} - Highstakes Leaderboard`);
+			let microstakesEmbed = new Discord.RichEmbed().setTitle(`${message.guild.name} - Microstakes Leaderboard`);
 			if (res.length === 0) {
-				highstakeEmbed.setColor('#FF0000');
-				highstakeEmbed.addField('No data found', 'Please add your winnings.');
+				microstakesEmbed.setColor('#FF0000');
+				microstakesEmbed.addField('No data found', 'Please add your winnings.');
 			} else if (res.length < 3) {
-				highstakeEmbed.setColor('#000000');
+				microstakesEmbed.setColor('#000000');
 				for (let i = 0; i < res.length; i++) {
 					let member = res[i].player_name || 'Username not found';
 					if (member === 'Username not found') {
-						highstakeEmbed.addField(`${i + 1}. ${member}`, `**Winnings**: €${addCommas(res[i].winnings)}`);
+						microstakesEmbed.addField(
+							`${i + 1}. ${member}`,
+							`**Winnings**: €${addCommas(res[i].winnings)}`
+						);
 					} else {
-						highstakeEmbed.addField(`${i + 1}. ${member}`, `**Winnings**: €${addCommas(res[i].winnings)}`);
+						microstakesEmbed.addField(
+							`${i + 1}. ${member}`,
+							`**Winnings**: €${addCommas(res[i].winnings)}`
+						);
 					}
 				}
 			} else {
-				highstakeEmbed.setColor('#00FFFF');
+				microstakesEmbed.setColor('#00FFFF');
 				for (let i = 0; i < 3; i++) {
 					let member = res[i].player_name || 'Username not found';
 					if (member === 'Username not found') {
-						highstakeEmbed.addField(`${i + 1}. ${member}`, `**Winnings**: €${addCommas(res[i].winnings)}`);
+						microstakesEmbed.addField(
+							`${i + 1}. ${member}`,
+							`**Winnings**: €${addCommas(res[i].winnings)}`
+						);
 					} else {
-						highstakeEmbed.addField(
+						microstakesEmbed.addField(
 							`${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
 							`**Date**: ${res[i].date_won} - **Winnings**: €${addCommas(res[i].winnings)}`
 						);
@@ -86,11 +95,11 @@ module.exports.run = async (bot, message, args) => {
 				}
 			}
 
-			message.channel.send(highstakeEmbed);
+			message.channel.send(microstakesEmbed);
 		});
 	}
 };
 
 module.exports.help = {
-	name: 'highstakes'
+	name: 'microstakes'
 };
