@@ -20,6 +20,11 @@ function addCommas(nStr) {
 }
 
 module.exports.run = async (bot, message, args) => {
+	// Fix for double spaces in code.
+	args = args.filter(function(e) {
+		return e.replace(/(\r\n|\n|\r)/gm, '');
+	});
+
 	let firstArg = args.shift();
 	let dateWon = args.pop();
 	let winningsAmount = args.pop();
