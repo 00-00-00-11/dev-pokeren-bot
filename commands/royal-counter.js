@@ -1,4 +1,4 @@
-const RoyalCount = require('../models/royalCount.js');
+const RoyalCount = require('../models/royal-counter.js');
 const config = require('../config.json');
 
 const mongoose = require('mongoose');

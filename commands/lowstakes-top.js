@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const config = require('../config.json');
-const Lowstake = require('../models/topLowstakes');
+const Lowstake = require('../models/lowstakes-top');
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URL_1 + process.env.MONGODB_PASS + process.env.MONGODB_URL_2, {

@@ -1,4 +1,4 @@
-const FTCount = require('../../models/ftCount');
+const FTCount = require('../../models/ft-counter');
 
 // GET /counters
 exports.counters = (req, res, next) => {
