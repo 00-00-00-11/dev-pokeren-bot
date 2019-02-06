@@ -20,14 +20,14 @@ function addCommas(nStr) {
 }
 
 module.exports.run = async (bot, message, args) => {
-	let addMicro = args.shift();
+	let firstArg = args.shift();
 	let dateWon = args.pop();
 	let winningsAmount = args.pop();
 	let playerName = args.shift();
 	let pokerClient = args.shift();
 	let tournamentName = args.join(' ');
 
-	if (addMicro === 'add') {
+	if (firstArg === 'add') {
 		if (!playerName || !pokerClient || !tournamentName || !winningsAmount || !dateWon)
 			return message.channel.send('Missing fields or incorrect format.');
 
@@ -53,6 +53,14 @@ module.exports.run = async (bot, message, args) => {
 				message.channel.send('Microstakes added.');
 			}
 		});
+	} else if (firstArg === 'clear') {
+		// Only allow from permitted users
+		if (!config.permittedUsers.includes(message.author.id)) return;
+
+		Microstake.deleteMany({}, (err, deleted) => {
+			if (err) console.log(err);
+			return message.channel.send('Microstake leaderboard cleared.');
+		});
 	} else {
 		Microstake.find({ stake: 'Microstake' }).sort([ [ 'winnings', 'descending' ] ]).exec((err, res) => {
 			if (err) console.log(err);
@@ -67,13 +75,13 @@ module.exports.run = async (bot, message, args) => {
 					let member = res[i].player_name || 'Username not found';
 					if (member === 'Username not found') {
 						microstakesEmbed.addField(
-							`${i + 1}. ${member}`,
-							`**Winnings**: €${addCommas(res[i].winnings)}`
+							`${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
+							`**Date**: ${res[i].date_won} - **Winnings**: €${addCommas(res[i].winnings)}`
 						);
 					} else {
 						microstakesEmbed.addField(
-							`${i + 1}. ${member}`,
-							`**Winnings**: €${addCommas(res[i].winnings)}`
+							`${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
+							`**Date**: ${res[i].date_won} - **Winnings**: €${addCommas(res[i].winnings)}`
 						);
 					}
 				}
@@ -83,8 +91,8 @@ module.exports.run = async (bot, message, args) => {
 					let member = res[i].player_name || 'Username not found';
 					if (member === 'Username not found') {
 						microstakesEmbed.addField(
-							`${i + 1}. ${member}`,
-							`**Winnings**: €${addCommas(res[i].winnings)}`
+							`${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
+							`**Date**: ${res[i].date_won} - **Winnings**: €${addCommas(res[i].winnings)}`
 						);
 					} else {
 						microstakesEmbed.addField(

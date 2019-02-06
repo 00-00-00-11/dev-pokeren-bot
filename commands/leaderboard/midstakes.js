@@ -20,14 +20,14 @@ function addCommas(nStr) {
 }
 
 module.exports.run = async (bot, message, args) => {
-	let addMid = args.shift();
+	let firstArg = args.shift();
 	let dateWon = args.pop();
 	let winningsAmount = args.pop();
 	let playerName = args.shift();
 	let pokerClient = args.shift();
 	let tournamentName = args.join(' ');
 
-	if (addMid === 'add') {
+	if (firstArg === 'add') {
 		if (!playerName || !pokerClient || !tournamentName || !winningsAmount || !dateWon)
 			return message.channel.send('Missing fields or incorrect format.');
 
@@ -53,6 +53,14 @@ module.exports.run = async (bot, message, args) => {
 				message.channel.send('Midstakes added.');
 			}
 		});
+	} else if (firstArg === 'clear') {
+		// Only allow from permitted users
+		if (!config.permittedUsers.includes(message.author.id)) return;
+
+		Midstake.deleteMany({}, (err, deleted) => {
+			if (err) console.log(err);
+			return message.channel.send('Midstake leaderboard cleared.');
+		});
 	} else {
 		Midstake.find({ stake: 'Midstake' }).sort([ [ 'winnings', 'descending' ] ]).exec((err, res) => {
 			if (err) console.log(err);
@@ -66,9 +74,15 @@ module.exports.run = async (bot, message, args) => {
 				for (let i = 0; i < res.length; i++) {
 					let member = res[i].player_name || 'Username not found';
 					if (member === 'Username not found') {
-						midstakeEmbed.addField(`${i + 1}. ${member}`, `**Winnings**: €${addCommas(res[i].winnings)}`);
+						midstakeEmbed.addField(
+							`${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
+							`**Date**: ${res[i].date_won} - **Winnings**: €${addCommas(res[i].winnings)}`
+						);
 					} else {
-						midstakeEmbed.addField(`${i + 1}. ${member}`, `**Winnings**: €${addCommas(res[i].winnings)}`);
+						midstakeEmbed.addField(
+							`${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
+							`**Date**: ${res[i].date_won} - **Winnings**: €${addCommas(res[i].winnings)}`
+						);
 					}
 				}
 			} else {
@@ -76,7 +90,10 @@ module.exports.run = async (bot, message, args) => {
 				for (let i = 0; i < 3; i++) {
 					let member = res[i].player_name || 'Username not found';
 					if (member === 'Username not found') {
-						midstakeEmbed.addField(`${i + 1}. ${member}`, `**Winnings**: €${addCommas(res[i].winnings)}`);
+						midstakeEmbed.addField(
+							`${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
+							`**Date**: ${res[i].date_won} - **Winnings**: €${addCommas(res[i].winnings)}`
+						);
 					} else {
 						midstakeEmbed.addField(
 							`${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
