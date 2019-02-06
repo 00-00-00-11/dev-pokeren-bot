@@ -18,6 +18,31 @@ module.exports.run = async (bot, message, args) => {
 		.addField('!royal', 'Show total Royal Flush count.')
 		.addField('!royal add', 'Add 1 to Royal Flush count.')
 		.addField('!royal edit <number>', 'Change Royal Flush count to number. (Admin only)')
+		.addField('!microstakes', 'See top 3 microstake scores.')
+		.addField(
+			'!microstakes add <name> <client> <tournament> <prize> <date>',
+			'Add score to microstakes database. (Admin only)'
+		)
+		.addField('!lowstakes', 'See top 3 lowstake scores.')
+		.addField(
+			'!lowstakes add <name> <client> <tournament> <prize> <date>',
+			'Add score to lowstakes database. (Admin only)'
+		)
+		.addField('!midstakes', 'See top 3 midstakes scores.')
+		.addField(
+			'!midstakes add <name> <client> <tournament> <prize> <date>',
+			'Add score to midstakes database. (Admin only)'
+		)
+		.addField('!highstakes', 'See top 3 highstake scores.')
+		.addField(
+			'!highstakes add <name> <client> <tournament> <prize> <date>',
+			'Add score to highstakes database. (Admin only)'
+		)
+		.addField('!livescores (alias !livetop3)', 'See top 3 live scores.')
+		.addField(
+			'!livescores add <name> <client> <tournament> <prize> <date>',
+			'Add score to livescores database. (Admin only)'
+		)
 		.setTimestamp()
 		.setFooter(`Brush Bot v${config.version} by Jan`);
 
