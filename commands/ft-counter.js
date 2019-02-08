@@ -1,10 +1,8 @@
 const FTCount = require('../models/ft-counter.js');
 const config = require('../config.json');
-
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URL_1 + process.env.MONGODB_PASS + process.env.MONGODB_URL_2, {
-	useNewUrlParser: true
-});
+
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true });
 
 module.exports.run = async (bot, message, args) => {
 	if (args[0] === 'edit' && isNaN(args[1])) {

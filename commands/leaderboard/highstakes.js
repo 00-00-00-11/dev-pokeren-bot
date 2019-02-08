@@ -1,11 +1,9 @@
 const Discord = require('discord.js');
 const config = require('../../config.json');
 const Highstake = require('../../models/leaderboard/highstakes');
-
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URL_1 + process.env.MONGODB_PASS + process.env.MONGODB_URL_2, {
-	useNewUrlParser: true
-});
+
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true });
 
 function addCommas(nStr) {
 	nStr += '';

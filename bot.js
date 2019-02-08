@@ -4,14 +4,16 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const bot = new Discord.Client({ disableEveryone: true });
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URL_1 + process.env.MONGODB_PASS + process.env.MONGODB_URL_2, {
-	useNewUrlParser: true,
-	useFindAndModify: false,
-	useCreateIndex: true
-});
+const DiscordUser = require('./models/discordUser');
+const staffServer = process.env.POKEREN_STAFF_SERVER;
+
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
 bot.commands = new Discord.Collection();
 
-const DiscordUser = require('./models/discordUser');
+Number.prototype.padLeft = function(base, chr) {
+	var len = String(base || 10).length - String(this).length + 1;
+	return len > 0 ? new Array(len).join(chr || '0') + this : this;
+};
 
 fs.readdir('./commands', (err, files) => {
 	if (err) console.log(err);
@@ -56,6 +58,83 @@ bot.on('ready', async () => {
 	bot.user.setActivity('Poker');
 });
 
+// Events
+bot.on('guildMemberAdd', async (member) => {
+	const g = bot.guilds.get(staffServer);
+	const m = g.member(member);
+	const joinedAt = m.joinedTimestamp;
+	const ch = g.channels.get('543382695984496640');
+
+	let d = new Date(joinedAt);
+	let dformat =
+		[ (d.getMonth() + 1).padLeft(), d.getDate().padLeft(), d.getFullYear() ].join('/') +
+		' ' +
+		[ d.getHours().padLeft(), d.getMinutes().padLeft(), d.getSeconds().padLeft() ].join(':');
+
+	ch.send(`👋 **${member.user.tag}** (${member.user.id}) joined the server. (Joined ${dformat})`);
+});
+
+bot.on('guildMemberRemove', async (member) => {
+	const g = bot.guilds.get(staffServer);
+	const m = g.member(member);
+	const joinedAt = m.joinedTimestamp;
+	const ch = g.channels.get('543382723952377856');
+
+	let d = new Date(joinedAt);
+	let dformat =
+		[ (d.getMonth() + 1).padLeft(), d.getDate().padLeft(), d.getFullYear() ].join('/') +
+		' ' +
+		[ d.getHours().padLeft(), d.getMinutes().padLeft(), d.getSeconds().padLeft() ].join(':');
+
+	ch.send(`👋 **${member.user.tag}** (${member.user.id}) left the server. (Joined ${dformat})`);
+});
+
+bot.on('channelCreate', async (channel) => {
+	const g = bot.guilds.get(staffServer);
+	const ch = g.channels.get('543446264780554244');
+
+	ch.send(`✏️ Channel **${channel.name}** (${channel.id}) was created.`);
+});
+
+bot.on('channelDelete', async (channel) => {
+	const g = bot.guilds.get(staffServer);
+	const ch = g.channels.get('543446264780554244');
+
+	ch.send(`✏️ Channel **${channel.name}** (${channel.id}) was deleted.`);
+});
+
+bot.on('channelUpdate', async (oldChannel, newChannel) => {
+	const g = bot.guilds.get(staffServer);
+	const ch = g.channels.get('543446264780554244');
+
+	ch.send(`⚙️ Channel **${oldChannel.name}** was renamed to **${newChannel.name}**. (${newChannel.id})`);
+});
+
+bot.on('guildMemberUpdate', async (oldMember, newMember) => {
+	const g = bot.guilds.get(staffServer);
+	const ch = g.channels.get('543451473082581002');
+
+	if (oldMember.user.username !== newMember.user.username) {
+		ch.send(`✏️ User **${oldMember.user.username}** changed username to **${newMember.username}**. (${newMember.id})`);
+	} else if (oldMember.nickname !== newMember.nickname) {
+		if (newMember.nickname === null) {
+			ch.send(`✏️ User **${oldMember.user.username}** removed his nickname. (${newMember.id})`);
+		} else {
+			ch.send(`✏️ User **${oldMember.user.tag}** changed nickname to **${newMember.nickname}**. (${newMember.id})`);
+		}
+	}
+});
+
+bot.on('guildUpdate', async (oldGuild, newGuild) => {
+	const g = bot.guilds.get(staffServer);
+	const ch = g.channels.get('543446264780554244');
+
+	if (oldGuild.name !== newGuild.name) {
+		ch.send(`⚙️ Guild **${oldGuild.name}** was renamed to **${newGuild.name}**. (${newGuild.id})`);
+	}
+});
+// End events
+
 bot.on('message', async (message) => {
 	if (message.author.bot) return;
 	if (message.channel.type === 'dm') return;
@@ -89,7 +168,6 @@ bot.on('message', async (message) => {
 					});
 
 					discordUser.save().catch((err) => console.log(err));
-					console.log(`Added ${discordUser.username} to the database.`);
 				} else {
 					return;
 				}

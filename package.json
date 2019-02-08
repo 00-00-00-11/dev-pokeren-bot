@@ -4,12 +4,14 @@
   "description": "Discord bot for pokeren.nl - Created with Node.js and Discord.js",
   "main": "bot.js",
   "dependencies": {
+    "@types/node": "^10.12.23",
     "discord.js": "^11.4.2",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "http": "^0.0.0",
     "mongoose": "^5.4.3",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "requirejs": "^2.3.6"
   },
   "devDependencies": {},
   "scripts": {

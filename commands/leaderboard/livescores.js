@@ -1,11 +1,9 @@
 const Discord = require('discord.js');
 const config = require('../../config.json');
 const Livescore = require('../../models/leaderboard/livescores');
-
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URL_1 + process.env.MONGODB_PASS + process.env.MONGODB_URL_2, {
-	useNewUrlParser: true
-});
+
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true });
 
 function addCommas(nStr) {
 	nStr += '';

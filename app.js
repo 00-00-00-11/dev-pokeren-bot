@@ -15,11 +15,7 @@ const midstakeRoutes = require('./api/routes/midstakes');
 const highstakeRoutes = require('./api/routes/highstakes');
 const livescoreRoutes = require('./api/routes/livescores');
 
-mongoose.connect(process.env.MONGODB_URL_1 + process.env.MONGODB_PASS + process.env.MONGODB_URL_2, {
-	useNewUrlParser: true,
-	useFindAndModify: false,
-	useCreateIndex: true
-});
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
 
 // Log requests to console.
 app.use(morgan('dev'));
