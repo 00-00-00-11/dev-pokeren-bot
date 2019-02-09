@@ -73,7 +73,7 @@ bot.on('guildMemberAdd', async (member) => {
 		' ' +
 		[ d.getHours().padLeft(), d.getMinutes().padLeft(), d.getSeconds().padLeft() ].join(':');
 
-	ch.send(`👋 **${member.user.tag}** (${member.user.id}) joined the server. (Joined ${dformat})`);
+	ch.send('👋 **' + member.user.tag + '** (' + member.user.id + ') joined the server. (`Joined ' + dformat + '`)');
 });
 
 bot.on('guildMemberRemove', async (member) => {
@@ -89,15 +89,15 @@ bot.on('guildMemberRemove', async (member) => {
 		' ' +
 		[ d.getHours().padLeft(), d.getMinutes().padLeft(), d.getSeconds().padLeft() ].join(':');
 
-	ch.send(`👋 **${member.user.tag}** (${member.user.id}) left the server. (Joined ${dformat})`);
+	ch.send('👋 **' + member.user.tag + '** (' + member.user.id + ') left the server. (`Joined ' + dformat + '`)');
 });
 
 bot.on('channelCreate', async (channel) => {
 	const g = bot.guilds.get(staffServer);
 	const ch = g.channels.get('543446264780554244');
-	if (channel.member.guild.id !== mainServer) return;
+	if (channel.guild.id !== mainServer) return;
 
-	ch.send(`✏️ Channel **${channel.name}** (${channel.id}) was created.`);
+	ch.send('✏️ Channel `' + channel.name + '` (' + channel.id + ') was created. <#' + channel.id + '>');
 });
 
 bot.on('channelDelete', async (channel) => {
@@ -105,7 +105,7 @@ bot.on('channelDelete', async (channel) => {
 	const ch = g.channels.get('543446264780554244');
 	if (channel.guild.id !== mainServer) return;
 
-	ch.send(`✏️ Channel **${channel.name}** (${channel.id}) was deleted.`);
+	ch.send('✏️ Channel `' + channel.name + '` (' + channel.id + ') was deleted.');
 });
 
 bot.on('channelUpdate', async (oldChannel, newChannel) => {
@@ -113,21 +113,29 @@ bot.on('channelUpdate', async (oldChannel, newChannel) => {
 	const ch = g.channels.get('543446264780554244');
 	if (oldChannel.guild.id !== mainServer) return;
 
-	ch.send(`⚙️ Channel **${oldChannel.name}** was renamed to **${newChannel.name}**. (${newChannel.id})`);
+	ch.send('⚙️ Channel `' + oldChannel.name + '` (' + newChannel.id + ') was renamed to `' + newChannel.name + '`');
 });
 
-bot.on('guildMemberUpdate', async (oM, nM) => {
+bot.on('guildMemberUpdate', async (oldMember, newMember) => {
 	const g = bot.guilds.get(staffServer);
 	const ch = g.channels.get('543451473082581002');
-	if (oM.guild.id !== mainServer) return;
+	const oM = oldMember;
+	const nM = newMember;
+	// if (oM.guild.id !== mainServer) return;
 
-	if (oM.user.username !== nM.user.username) {
-		ch.send(`✏️ User **${oM.user.username}** changed username to **${nM.username}**. (${nM.id})`);
+	console.log(oM.user);
+	console.log(nM.user);
+
+	if (oM.user.username !== nM.user.username || oM.user.discriminator !== nM.user.discriminator) {
+		ch.send(
+			`✏️ User **${oM.user.username}#${oM.user.discriminator}** changed username to **${nM.user.username}#${nM.user
+				.discriminator}** (${nM.id})`
+		);
 	} else if (oM.nickname !== nM.nickname) {
 		if (nM.nickname === null) {
-			ch.send(`✏️ User **${oM.user.username}** removed his nickname. (${nM.id})`);
+			ch.send(`✏️ User **${oM.user.username}** removed his nickname (${nM.id})`);
 		} else {
-			ch.send(`✏️ User **${oM.user.tag}** changed nickname to **${nM.nickname}**. (${nM.id})`);
+			ch.send('✏️ User **' + oM.user.tag + '** changed nickname to `' + nM.nickname + '` (' + nM.id + ')');
 		}
 	}
 });
@@ -138,7 +146,7 @@ bot.on('guildUpdate', async (oldGuild, newGuild) => {
 	if (oldGuild.id !== mainServer) return;
 
 	if (oldGuild.name !== newGuild.name) {
-		ch.send(`⚙️ Guild **${oldGuild.name}** was renamed to **${newGuild.name}**. (${newGuild.id})`);
+		ch.send('⚙️ Server `' + oldGuild.name + '` was renamed to `' + newGuild.name + '` (' + newGuild.id + ')');
 	}
 });
 
@@ -159,8 +167,19 @@ bot.on('messageUpdate', async (oldMessage, newMessage) => {
 	if (oldMessage.guild.id !== mainServer) return;
 
 	ch.send(
-		`💬 **${user.username}#${user.discriminator}** (${user.id}) changed the message **${oldMessage.content}** to **${newMessage.content}** in channel **<#${newMessage
-			.channel.id}>**`
+		'💬 **' +
+			user.username +
+			'#' +
+			user.discriminator +
+			'** (' +
+			user.id +
+			') changed the message `' +
+			oldMessage.content +
+			'` to `' +
+			newMessage.content +
+			'` in <#' +
+			newMessage.channel.id +
+			'>'
 	);
 });
 // End events
