@@ -26,7 +26,7 @@ module.exports.run = async (bot, message, args) => {
 				if (!updated) {
 					return message.channel.send('No user found for given ID.');
 				} else {
-					return message.channel.send('Updated chipcount for user ' + args[1]);
+					return message.channel.send('Removed chipcount for user ' + args[1]);
 				}
 			});
 		} else {
