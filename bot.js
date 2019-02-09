@@ -6,6 +6,7 @@ const bot = new Discord.Client({ disableEveryone: true });
 const mongoose = require('mongoose');
 const DiscordUser = require('./models/discordUser');
 const staffServer = process.env.POKEREN_STAFF_SERVER;
+const mainServer = process.env.POKEREN_SERVER;
 
 mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
 bot.commands = new Discord.Collection();
@@ -80,7 +81,7 @@ bot.on('guildMemberRemove', async (member) => {
 	const m = g.member(member);
 	const joinedAt = m.joinedTimestamp;
 	const ch = g.channels.get('543382723952377856');
-	if (!g) return;
+	if (member.guild.id !== mainServer) return;
 
 	let d = new Date(joinedAt);
 	let dformat =
@@ -94,9 +95,7 @@ bot.on('guildMemberRemove', async (member) => {
 bot.on('channelCreate', async (channel) => {
 	const g = bot.guilds.get(staffServer);
 	const ch = g.channels.get('543446264780554244');
-	// if (channel.member.guild.id !== g) return;
-
-	console.log(channel);
+	if (channel.member.guild.id !== mainServer) return;
 
 	ch.send(`✏️ Channel **${channel.name}** (${channel.id}) was created.`);
 });
@@ -104,9 +103,7 @@ bot.on('channelCreate', async (channel) => {
 bot.on('channelDelete', async (channel) => {
 	const g = bot.guilds.get(staffServer);
 	const ch = g.channels.get('543446264780554244');
-	if (channel.guild.id !== g) return;
-
-	console.log(channel);
+	if (channel.guild.id !== mainServer) return;
 
 	ch.send(`✏️ Channel **${channel.name}** (${channel.id}) was deleted.`);
 });
@@ -114,7 +111,7 @@ bot.on('channelDelete', async (channel) => {
 bot.on('channelUpdate', async (oldChannel, newChannel) => {
 	const g = bot.guilds.get(staffServer);
 	const ch = g.channels.get('543446264780554244');
-	if (oldChannel.guild.id !== g) return;
+	if (oldChannel.guild.id !== mainServer) return;
 
 	ch.send(`⚙️ Channel **${oldChannel.name}** was renamed to **${newChannel.name}**. (${newChannel.id})`);
 });
@@ -122,7 +119,7 @@ bot.on('channelUpdate', async (oldChannel, newChannel) => {
 bot.on('guildMemberUpdate', async (oM, nM) => {
 	const g = bot.guilds.get(staffServer);
 	const ch = g.channels.get('543451473082581002');
-	if (oM.guild.id !== g) return;
+	if (oM.guild.id !== mainServer) return;
 
 	if (oM.user.username !== nM.user.username) {
 		ch.send(`✏️ User **${oM.user.username}** changed username to **${nM.username}**. (${nM.id})`);
@@ -138,7 +135,7 @@ bot.on('guildMemberUpdate', async (oM, nM) => {
 bot.on('guildUpdate', async (oldGuild, newGuild) => {
 	const g = bot.guilds.get(staffServer);
 	const ch = g.channels.get('543446264780554244');
-	if (oldGuild.id !== g) return;
+	if (oldGuild.id !== mainServer) return;
 
 	if (oldGuild.name !== newGuild.name) {
 		ch.send(`⚙️ Guild **${oldGuild.name}** was renamed to **${newGuild.name}**. (${newGuild.id})`);
@@ -149,7 +146,7 @@ bot.on('messageDelete', async (message) => {
 	const g = bot.guilds.get(staffServer);
 	const ch = g.channels.get('543707440907288589');
 	if (message.member.user.bot) return;
-	if (message.guild.id !== g) return;
+	if (message.guild.id !== mainServer) return;
 
 	ch.send('💬 Message `' + message.content + '` was deleted from <#' + message.channel.id + '>');
 });
@@ -159,9 +156,7 @@ bot.on('messageUpdate', async (oldMessage, newMessage) => {
 	const ch = g.channels.get('543707440907288589');
 	const user = newMessage.member.user;
 	if (oldMessage.member.user.bot) return;
-	if (oldMessage.guild.id !== g) return;
-
-	console.log(oldMessage);
+	if (oldMessage.guild.id !== mainServer) return;
 
 	ch.send(
 		`💬 **${user.username}#${user.discriminator}** (${user.id}) changed the message **${oldMessage.content}** to **${newMessage.content}** in channel **<#${newMessage
