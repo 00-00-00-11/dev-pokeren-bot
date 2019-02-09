@@ -121,10 +121,7 @@ bot.on('guildMemberUpdate', async (oldMember, newMember) => {
 	const ch = g.channels.get('543451473082581002');
 	const oM = oldMember;
 	const nM = newMember;
-	// if (oM.guild.id !== mainServer) return;
-
-	console.log(oM.user);
-	console.log(nM.user);
+	if (oM.guild.id !== mainServer) return;
 
 	if (oM.user.username !== nM.user.username || oM.user.discriminator !== nM.user.discriminator) {
 		ch.send(
@@ -196,6 +193,13 @@ bot.on('message', async (message) => {
 	if (message.content.startsWith(config.prefix)) {
 		let commandfile = bot.commands.get(cmd.slice(prefix.length));
 		if (commandfile) commandfile.run(bot, message, args);
+
+		// Send commands used to event log server.
+		const g = bot.guilds.get(staffServer);
+		const ch = g.channels.get('543840893677993984');
+		if (message.guild.id !== mainServer) return;
+
+		ch.send('**' + message.author.tag + '** used the command `' + message.content + '` in <#' + message.channel.id + '>');
 	} else {
 		// Add users
 		DiscordUser.findOne(

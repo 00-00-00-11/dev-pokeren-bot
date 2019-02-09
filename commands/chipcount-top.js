@@ -79,16 +79,13 @@ module.exports.run = async (bot, message, args) => {
 				);
 				if (res.length === 0) {
 					leveltopEmbed.setColor('#FF0000');
-					leveltopEmbed.addField('No data found');
+					leveltopEmbed.addField('No data found', 'Please add your chipcounts');
 				} else if (res.length < 10) {
 					leveltopEmbed.setColor('#00FF00');
 					for (let i = 0; i < res.length; i++) {
 						let member = message.guild.members.get(res[i].user_id) || 'Username not found';
 						if (member === 'Username not found') {
-							leveltopEmbed.addField(
-								`${i + 1}. ${member}`,
-								`**Chips**: ${numberWithCommas(res[i].chipcount)}`
-							);
+							leveltopEmbed.addField(`${i + 1}. ${member}`, `**Chips**: ${numberWithCommas(res[i].chipcount)}`);
 						} else {
 							leveltopEmbed.addField(
 								`${i + 1}. ${res[i].name}`,
@@ -101,10 +98,7 @@ module.exports.run = async (bot, message, args) => {
 					for (let i = 0; i < 10; i++) {
 						let member = message.guild.members.get(res[i].user_id) || 'Username not found';
 						if (member === 'Username not found') {
-							leveltopEmbed.addField(
-								`${i + 1}. ${member}`,
-								`**Chips**: ${numberWithCommas(res[i].chipcount)}`
-							);
+							leveltopEmbed.addField(`${i + 1}. ${member}`, `**Chips**: ${numberWithCommas(res[i].chipcount)}`);
 						} else {
 							leveltopEmbed.addField(
 								`${i + 1}. ${res[i].name}`,
