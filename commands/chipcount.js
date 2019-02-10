@@ -44,6 +44,7 @@ module.exports.run = async (bot, message, args) => {
 		const findId = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[1]) || args[1];
 		if (!findId.user) return message.channel.send('No user with such ID.');
 		const clearUser = findId.user.id;
+		if (args[2] === '0') return message.channel.send('Please use `!chipcount clear` isntead');
 
 		if (guildMembers.includes(clearUser)) {
 			Chipcount.findOneAndUpdate(
