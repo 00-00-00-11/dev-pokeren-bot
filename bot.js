@@ -16,43 +16,28 @@ Number.prototype.padLeft = function(base, chr) {
 	return len > 0 ? new Array(len).join(chr || '0') + this : this;
 };
 
-fs.readdir('./commands', (err, files) => {
-	if (err) console.log(err);
+// Load commands
+const generalCommands = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
+const lbCommands = fs.readdirSync('./commands/leaderboard').filter((file) => file.endsWith('.js'));
 
-	let jsfile = files.filter((f) => f.split('.').pop() === 'js');
-	if (jsfile.length <= 0) {
-		console.log("Couldn't find commands.");
-		return;
+for (const file of generalCommands) {
+	const props = require(`./commands/${file}`);
+	console.log(`${file} loaded!`);
+	bot.commands.set(props.help.name, props);
+	if (props.help.alias) {
+		bot.commands.set(props.help.alias, props);
 	}
+}
 
-	jsfile.forEach((f, i) => {
-		let props = require(`./commands/${f}`);
-		console.log(`${f} loaded!`);
-		bot.commands.set(props.help.name, props);
-		if (props.help.alias) {
-			bot.commands.set(props.help.alias, props);
-		}
-	});
-});
-
-fs.readdir('./commands/leaderboard', (err, files) => {
-	if (err) console.log(err);
-
-	let jsfile = files.filter((f) => f.split('.').pop() === 'js');
-	if (jsfile.length <= 0) {
-		console.log("Couldn't find commands.");
-		return;
+for (const file of lbCommands) {
+	const props = require(`./commands/leaderboard/${file}`);
+	console.log(`${file} loaded!`);
+	bot.commands.set(props.help.name, props);
+	if (props.help.alias) {
+		bot.commands.set(props.help.alias, props);
 	}
-
-	jsfile.forEach((f, i) => {
-		let props = require(`./commands/leaderboard/${f}`);
-		console.log(`${f} loaded!`);
-		bot.commands.set(props.help.name, props);
-		if (props.help.alias) {
-			bot.commands.set(props.help.alias, props);
-		}
-	});
-});
+}
+// End load commands
 
 bot.on('ready', async () => {
 	console.log(`${bot.user.username} is online!`);
@@ -67,8 +52,8 @@ bot.on('guildMemberAdd', async (member) => {
 	const ch = g.channels.get('543382695984496640');
 	if (!g) return;
 
-	let d = new Date(joinedAt);
-	let dformat =
+	const d = new Date(joinedAt);
+	const dformat =
 		[ (d.getMonth() + 1).padLeft(), d.getDate().padLeft(), d.getFullYear() ].join('/') +
 		' ' +
 		[ d.getHours().padLeft(), d.getMinutes().padLeft(), d.getSeconds().padLeft() ].join(':');
@@ -83,8 +68,8 @@ bot.on('guildMemberRemove', async (member) => {
 	const ch = g.channels.get('543382723952377856');
 	if (member.guild.id !== mainServer) return;
 
-	let d = new Date(joinedAt);
-	let dformat =
+	const d = new Date(joinedAt);
+	const dformat =
 		[ (d.getMonth() + 1).padLeft(), d.getDate().padLeft(), d.getFullYear() ].join('/') +
 		' ' +
 		[ d.getHours().padLeft(), d.getMinutes().padLeft(), d.getSeconds().padLeft() ].join(':');
@@ -108,12 +93,20 @@ bot.on('channelDelete', async (channel) => {
 	ch.send('✏️ Channel `' + channel.name + '` (' + channel.id + ') was deleted.');
 });
 
+// require('./modules/channelUpdate')();
+
+// bot.on('channelUpdate', async (oldChannel, newChannel) => {
+// 	channelUpdateEvent(oldChannel, newChannel);
+// });
+
 bot.on('channelUpdate', async (oldChannel, newChannel) => {
 	const g = bot.guilds.get(staffServer);
 	const ch = g.channels.get('543446264780554244');
 	if (oldChannel.guild.id !== mainServer) return;
 
-	ch.send('⚙️ Channel `' + oldChannel.name + '` (' + newChannel.id + ') was renamed to `' + newChannel.name + '`');
+	if (oldChannel.name !== newChannel.name) {
+		ch.send('⚙️ Channel `' + oldChannel.name + '` (' + newChannel.id + ') was renamed to `' + newChannel.name + '`');
+	}
 });
 
 bot.on('guildMemberUpdate', async (oldMember, newMember) => {
@@ -163,21 +156,23 @@ bot.on('messageUpdate', async (oldMessage, newMessage) => {
 	if (oldMessage.member.user.bot) return;
 	if (oldMessage.guild.id !== mainServer) return;
 
-	ch.send(
-		'💬 **' +
-			user.username +
-			'#' +
-			user.discriminator +
-			'** (' +
-			user.id +
-			') changed the message `' +
-			oldMessage.content +
-			'` to `' +
-			newMessage.content +
-			'` in <#' +
-			newMessage.channel.id +
-			'>'
-	);
+	if (oldMessage.content !== newMessage.content) {
+		ch.send(
+			'💬 **' +
+				user.username +
+				'#' +
+				user.discriminator +
+				'** (' +
+				user.id +
+				') changed the message `' +
+				oldMessage.content +
+				'` to `' +
+				newMessage.content +
+				'` in <#' +
+				newMessage.channel.id +
+				'>'
+		);
+	}
 });
 // End events
 
@@ -185,13 +180,13 @@ bot.on('message', async (message) => {
 	if (message.author.bot) return;
 	if (message.channel.type === 'dm') return;
 
-	let prefix = config.prefix;
-	let messageArray = message.content.split(' ');
-	let cmd = messageArray[0].toLowerCase();
-	let args = messageArray.slice(1);
+	const prefix = config.prefix;
+	const messageArray = message.content.split(' ');
+	const cmd = messageArray[0].toLowerCase();
+	const args = message.content.slice(prefix.length).split(/ +/);
 
 	if (message.content.startsWith(config.prefix)) {
-		let commandfile = bot.commands.get(cmd.slice(prefix.length));
+		const commandfile = bot.commands.get(cmd.slice(prefix.length));
 		if (commandfile) commandfile.run(bot, message, args);
 
 		// Send commands used to event log server.
