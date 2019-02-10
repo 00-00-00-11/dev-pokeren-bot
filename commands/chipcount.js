@@ -19,14 +19,16 @@ module.exports.run = async (bot, message, args) => {
 	if (args[0] === 'clear') {
 		// Only allow from permitted users
 		if (!config.permittedUsers.includes(message.author.id)) return;
+		const findId = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[1]);
+		const clearUser = findId.user.id;
 
-		if (guildMembers.includes(args[1])) {
-			Chipcount.deleteOne({ user_id: args[1] }, (err, updated) => {
+		if (guildMembers.includes(clearUser)) {
+			Chipcount.deleteOne({ user_id: clearUser }, (err, updated) => {
 				if (err) console.log(err);
 				if (!updated) {
 					return message.channel.send('No user found for given ID.');
 				} else {
-					return message.channel.send('Removed chipcount for user ' + args[1]);
+					return message.channel.send('Removed chipcount for user ' + clearUser);
 				}
 			});
 		} else {
@@ -39,9 +41,13 @@ module.exports.run = async (bot, message, args) => {
 		// Only allow from permitted users
 		if (!config.permittedUsers.includes(message.author.id)) return;
 
-		if (guildMembers.includes(args[1])) {
+		const findId = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[1]) || args[1];
+		if (!findId.user) return message.channel.send('No user with such ID.');
+		const clearUser = findId.user.id;
+
+		if (guildMembers.includes(clearUser)) {
 			Chipcount.findOneAndUpdate(
-				{ user_id: args[1] },
+				{ user_id: clearUser },
 				{
 					$set: {
 						chipcount: args[2],
@@ -52,9 +58,9 @@ module.exports.run = async (bot, message, args) => {
 				(err, updated) => {
 					if (err) console.log(err);
 					if (!updated) {
-						return message.channel.send(args[1] + ' does not have a chipcount to update.');
+						return message.channel.send(clearUser + ' does not have a chipcount to update.');
 					} else {
-						return message.channel.send('Updated chipcount for user ' + args[1]);
+						return message.channel.send('Updated chipcount for user ' + clearUser);
 					}
 				}
 			);
