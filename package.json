@@ -10,8 +10,7 @@
     "express": "^4.16.4",
     "http": "^0.0.0",
     "mongoose": "^5.4.3",
-    "morgan": "^1.9.1",
-    "requirejs": "^2.3.6"
+    "morgan": "^1.9.1"
   },
   "devDependencies": {},
   "scripts": {

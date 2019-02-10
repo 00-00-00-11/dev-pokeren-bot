@@ -19,6 +19,7 @@ module.exports.run = async (bot, message, args) => {
 	if (args[0] === 'clear') {
 		// Only allow from permitted users
 		if (!config.permittedUsers.includes(message.author.id)) return;
+
 		const findId = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[1]);
 		const clearUser = findId.user.id;
 
@@ -78,7 +79,6 @@ module.exports.run = async (bot, message, args) => {
 		}
 
 		if (chipcounter) chipcounter = chipcounter.replace(/[.,\s]/g, '');
-
 		if (!namer && chipcounter) return message.channel.send('Missing name or chipcount.');
 
 		if (namer && chipcounter) {
@@ -87,7 +87,7 @@ module.exports.run = async (bot, message, args) => {
 					if (err) console.log(err);
 					return message.channel.send('Chipcount deleted.');
 				});
-			} else if (!Number(chipcounter)) {
+			} else if (isNaN(chipcounter)) {
 				return message.channel.send('Invalid chipcount. Must be a number without commas, periods, or spaces.');
 			} else if (chipcounter > 0) {
 				Chipcount.findOneAndUpdate(
