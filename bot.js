@@ -183,7 +183,7 @@ bot.on('message', async (message) => {
 	const prefix = config.prefix;
 	const messageArray = message.content.split(' ');
 	const cmd = messageArray[0].toLowerCase();
-	const args = message.content.slice(prefix.length).split(/ +/);
+	const args = message.content.slice(prefix.length).split(/ +/).slice(1);
 
 	if (message.content.startsWith(config.prefix)) {
 		const commandfile = bot.commands.get(cmd.slice(prefix.length));
