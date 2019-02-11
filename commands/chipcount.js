@@ -20,23 +20,22 @@ module.exports.run = async (bot, message, args) => {
 		// Only allow from permitted users
 		if (!config.permittedUsers.includes(message.author.id)) return;
 
-		const findId = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[1]);
-		const clearUser = findId.user.id;
+		if (!args[1]) return message.channel.send('No user specified. To clear all, use `!chipcounts clear`');
+		if (args[1]) {
+			const findId = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[1]);
+			if (!findId) return message.channel.send('No user found for given ID.');
+			const clearUser = findId.user.id;
 
-		if (guildMembers.includes(clearUser)) {
-			Chipcount.deleteOne({ user_id: clearUser }, (err, updated) => {
-				if (err) console.log(err);
-				if (!updated) {
-					return message.channel.send('No user found for given ID.');
-				} else {
-					return message.channel.send('Removed chipcount for user ' + clearUser);
-				}
-			});
-		} else {
-			Chipcount.deleteMany({}, (err, deleted) => {
-				if (err) console.log(err);
-				return message.channel.send('Chipcounts cleared.');
-			});
+			if (guildMembers.includes(clearUser)) {
+				Chipcount.deleteOne({ user_id: clearUser }, (err, updated) => {
+					if (err) console.log(err);
+					if (!updated) {
+						return message.channel.send('No user found for given ID.');
+					} else {
+						return message.channel.send('Removed chipcount for user ' + clearUser);
+					}
+				});
+			}
 		}
 	} else if (args[0] === 'set') {
 		// Only allow from permitted users

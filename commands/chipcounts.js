@@ -67,6 +67,14 @@ module.exports.run = async (bot, message, args) => {
 				return message.channel.send(`Title removed.`);
 			}
 		);
+	} else if (args[0] === 'clear') {
+		// Only allow from permitted users
+		if (!config.permittedUsers.includes(message.author.id)) return;
+
+		Chipcount.deleteMany({}, (err, deleted) => {
+			if (err) console.log(err);
+			return message.channel.send('All chipcounts cleared.');
+		});
 	} else {
 		TournamentTitle.findOne({ type: 'TournamentTitle' }).exec((err, tTitle) => {
 			if (err) console.log(err);
