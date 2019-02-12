@@ -82,13 +82,15 @@ module.exports.run = async (bot, message, args) => {
 			Chipcount.find({ server_id: message.guild.id }).sort([ [ 'chipcount', 'descending' ] ]).exec((err, res) => {
 				if (err) console.log(err);
 
+				let ccArr = [];
+
 				let leveltopEmbed = new Discord.RichEmbed().setTitle(
 					`Current Chipcounts - ${tTitle.title || message.guild.name}`
 				);
 				if (res.length === 0) {
 					leveltopEmbed.setColor('#FF0000');
 					leveltopEmbed.addField('No data found', 'Please add your chipcounts');
-				} else if (res.length < 10) {
+				} else if (res.length <= 10) {
 					leveltopEmbed.setColor('#00FF00');
 					for (let i = 0; i < res.length; i++) {
 						let member = message.guild.members.get(res[i].user_id) || 'Username not found';
@@ -101,20 +103,34 @@ module.exports.run = async (bot, message, args) => {
 							);
 						}
 					}
-				} else {
+				} else if (res.length < 40) {
 					leveltopEmbed.setColor('#00FF00');
-					for (let i = 0; i < 10; i++) {
+					for (let i = 0; i < res.length; i++) {
 						let member = message.guild.members.get(res[i].user_id) || 'Username not found';
 						if (member === 'Username not found') {
-							leveltopEmbed.addField(`${i + 1}. ${member}`, `**Chips**: ${numberWithCommas(res[i].chipcount)}`);
+							ccArr.push(`${i + 1}. ${member} ${numberWithCommas(res[i].chipcount)}`);
+							leveltopEmbed.setDescription(ccArr);
 						} else {
-							leveltopEmbed.addField(
-								`${i + 1}. ${res[i].name}`,
-								`**Chips**: ${numberWithCommas(res[i].chipcount)}`
-							);
+							ccArr.push(`${i + 1}. ${res[i].name} ${numberWithCommas(res[i].chipcount)}`);
+							leveltopEmbed.setDescription(ccArr);
+						}
+					}
+				} else {
+					leveltopEmbed.setColor('#00FF00');
+					for (let i = 0; i < 40; i++) {
+						let member = message.guild.members.get(res[i].user_id) || 'Username not found';
+						if (member === 'Username not found') {
+							ccArr.push(`${i + 1}. ${member} ${numberWithCommas(res[i].chipcount)}`);
+							leveltopEmbed.setDescription(ccArr);
+						} else {
+							ccArr.push(`${i + 1}. ${res[i].name} ${numberWithCommas(res[i].chipcount)}`);
+							leveltopEmbed.setDescription(ccArr);
 						}
 					}
 				}
+
+				leveltopEmbed.setTimestamp();
+				leveltopEmbed.setFooter(`Brush Bot v${config.version} by Jan`);
 
 				message.channel.send(leveltopEmbed);
 			});
