@@ -1,32 +1,14 @@
 const Discord = require('discord.js');
 
 module.exports.run = async (bot, message, args) => {
+	if (message.channel.id !== '537750090677485598') return;
+
 	const slots = [
-		{
-			name: 'apple',
-			icon: '🍎',
-			amount: 10
-		},
-		{
-			name: 'banana',
-			icon: '🍌',
-			amount: 6
-		},
-		{
-			name: 'cherries',
-			icon: '🍒',
-			amount: 12
-		},
-		{
-			name: 'strawberry',
-			icon: '🍓',
-			amount: 14
-		},
-		{
-			name: 'grapes',
-			icon: '🍇',
-			amount: 8
-		}
+		{ name: 'Banana', icon: '🍌', amount: 6 },
+		{ name: 'Grapes', icon: '🍇', amount: 8 },
+		{ name: 'Apple', icon: '🍎', amount: 10 },
+		{ name: 'Cherries', icon: '🍒', amount: 12 },
+		{ name: 'Strawberry', icon: '🍓', amount: 14 }
 	];
 
 	const result1 = Math.floor(Math.random() * slots.length);

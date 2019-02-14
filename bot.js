@@ -8,6 +8,7 @@ bot.commands = new Discord.Collection();
 // Load commands
 const generalCommands = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
 const lbCommands = fs.readdirSync('./commands/leaderboard').filter((file) => file.endsWith('.js'));
+const bettingCommands = fs.readdirSync('./commands/betting').filter((file) => file.endsWith('.js'));
 
 for (const file of generalCommands) {
 	const props = require(`./commands/${file}`);
@@ -20,6 +21,15 @@ for (const file of generalCommands) {
 
 for (const file of lbCommands) {
 	const props = require(`./commands/leaderboard/${file}`);
+	console.log(`${file} loaded!`);
+	bot.commands.set(props.help.name, props);
+	if (props.help.alias) {
+		bot.commands.set(props.help.alias, props);
+	}
+}
+
+for (const file of bettingCommands) {
+	const props = require(`./commands/betting/${file}`);
 	console.log(`${file} loaded!`);
 	bot.commands.set(props.help.name, props);
 	if (props.help.alias) {

@@ -7,7 +7,7 @@ module.exports.run = async (bot, message, args) => {
 		.setColor('#00FF00')
 		.setThumbnail('https://www.pokeren.nl/assets/Uploads/f018c5eefa/pokeren_logo-v2.png')
 		.setDescription(
-			'This command will work for all stakes and leaderboards. Simply replace <stake> with either microstakes, lowstakes, midstakes, highstakes or livescores\n\nA valid command will look like this:\n!midstakes add jaaneh PokerStars Big $109 $155.75 01/01/2000'
+			'This command will work for all stakes and leaderboards. Simply replace <stake> with either microstakes, lowstakes, midstakes, highstakes or livescores\n\nA valid add command will look like this:\n!midstakes add jaaneh PokerStars Big $109 $155.75 01/01/2000'
 		)
 		.addField('!<stake>', 'See top 3 stake scores.')
 		.addField('!<stake> add <name> <client> <tournament> <prize> <date>', 'Add score to stakes database. (Admin only)')
@@ -19,5 +19,6 @@ module.exports.run = async (bot, message, args) => {
 };
 
 module.exports.help = {
-	name: 'leaderboardhelp'
+	name: 'leaderboardhelp',
+	alias: 'lbhelp'
 };
