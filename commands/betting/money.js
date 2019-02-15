@@ -65,7 +65,7 @@ module.exports.run = async (bot, message, args) => {
 					last_daily: null
 				});
 				newMoney.save();
-				message.channel.send(`Money created.`);
+				message.channel.send(`Money created with €0. Use \`!money daily\` to get some.`);
 			} else {
 				return message.channel.send(`You have €${numberWithCommas(money.money)}.`);
 			}
