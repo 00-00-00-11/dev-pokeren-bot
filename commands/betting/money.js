@@ -16,8 +16,7 @@ function generateDaily(min, max) {
 }
 
 module.exports.run = async (bot, message, args) => {
-	if (message.channel.id !== '533151488739115010') return;
-	if (!config.permittedUsers.includes(message.author.id)) return;
+	if (message.channel.id !== '537750090677485598') return;
 
 	const cooldown = 86400000;
 
