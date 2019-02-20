@@ -18,10 +18,10 @@ function generateDaily(min, max) {
 module.exports.run = async (bot, message, args) => {
 	if (message.channel.id !== '537750090677485598') return;
 
-	const cooldown = 86400000;
+	const cooldown = 43200000;
 
 	if (args[0] === 'daily') {
-		const dailyAmount = generateDaily(100, 150);
+		const dailyAmount = generateDaily(300, 400);
 
 		Money.findOneAndUpdate({ user_id: message.author.id }, { new: true }, (err, money) => {
 			if (err) console.log(err);
