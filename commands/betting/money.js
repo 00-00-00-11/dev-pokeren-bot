@@ -20,7 +20,27 @@ module.exports.run = async (bot, message, args) => {
 
 	const cooldown = 43200000;
 
-	if (args[0] === 'daily') {
+	if (args[0] === 'giveall') {
+		// Only allow from permitted users
+		if (!config.permittedUsers.includes(message.author.id)) return;
+		if (!args[1]) return message.channel.send('Missing amount to give.');
+
+		const givenAmount = args[1];
+
+		Money.updateMany(
+			{},
+			{
+				$inc: {
+					money: givenAmount
+				}
+			},
+			(err, updated) => {
+				if (err) console.log(err);
+
+				return message.channel.send(`Gave all users in database €${numberWithCommas(givenAmount)}!`);
+			}
+		);
+	} else if (args[0] === 'daily') {
 		const dailyAmount = generateDaily(300, 400);
 
 		Money.findOneAndUpdate({ user_id: message.author.id }, { new: true }, (err, money) => {
