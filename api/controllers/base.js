@@ -29,6 +29,10 @@ exports.get_all = (req, res, next) => {
 		},
 		'/livescores': {
 			'/': 'Returns all livescore scores currently in database.'
+		},
+		'/money': {
+			'/': 'Returns money for all users in database.',
+			'/:user_id': 'Returns money for specific user.'
 		}
 	});
 };

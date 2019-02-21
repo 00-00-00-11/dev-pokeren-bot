@@ -14,6 +14,7 @@ const lowstakeRoutes = require('./api/routes/lowstakes');
 const midstakeRoutes = require('./api/routes/midstakes');
 const highstakeRoutes = require('./api/routes/highstakes');
 const livescoreRoutes = require('./api/routes/livescores');
+const moneyRoutes = require('./api/routes/money');
 
 mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
 
@@ -46,6 +47,7 @@ app.use('/lowstakes', lowstakeRoutes);
 app.use('/midstakes', midstakeRoutes);
 app.use('/highstakes', highstakeRoutes);
 app.use('/livescores', livescoreRoutes);
+app.use('/money', moneyRoutes);
 
 // Error handling
 app.use((req, res, next) => {
