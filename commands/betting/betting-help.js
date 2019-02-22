@@ -8,6 +8,7 @@ module.exports.run = async (bot, message, args) => {
 		.setThumbnail('https://www.pokeren.nl/assets/Uploads/f018c5eefa/pokeren_logo-v2.png')
 		.addField('!money', 'Check your money.')
 		.addField('!money daily', 'Collect daily. Random €300-400 (Every 12h).')
+		.addField('!money give <user> <amount>', 'Transfer money to someone else.')
 		.addField('!slots <bet>', 'Spin the slot machine.')
 		.addField('!roulette <number> <bet>', 'Bet on a roulette number.')
 		.addField('!roulette <color> <bet>', 'Bet on a roulette color.')

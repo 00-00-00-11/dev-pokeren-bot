@@ -40,6 +40,56 @@ module.exports.run = async (bot, message, args) => {
 				return message.channel.send(`Gave all users in database €${numberWithCommas(givenAmount)}!`);
 			}
 		);
+	} else if (args[0] === 'give') {
+		const giveUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[1]));
+		const giveAmount = parseInt(args[2]);
+		if (!giveUser) return message.channel.send('Missing or invalid user.');
+		if (giveAmount <= 0) return message.channel.send("Can't give €0");
+		if (!giveAmount) return message.channel.send('Missing amount.');
+		if (message.author.id === giveUser.user.id) return message.channel.send("Can't give yourself money!");
+
+		Money.findOneAndUpdate({ user_id: message.author.id }, { new: true }, (err, fromUser) => {
+			if (err) console.log(err);
+			if (!fromUser) {
+				const newUser = new Money({
+					_id: mongoose.Types.ObjectId(),
+					username: message.author.username,
+					user_id: message.author.id,
+					server_name: message.guild.name,
+					server_id: message.guild.id,
+					money: 0,
+					last_daily: null
+				});
+				newUser.save();
+				return message.channel.send(`Not enough money. Use \`!money daily\` to get some.`);
+			} else {
+				Money.findOneAndUpdate({ user_id: giveUser.user.id }, { new: true }, (err, toUser) => {
+					if (err) console.log(err);
+					if (giveAmount > fromUser.money) return message.channel.send("Can't send more than you've got!");
+					if (!toUser) {
+						const newUser = new Money({
+							_id: mongoose.Types.ObjectId(),
+							username: giveUser.user.username,
+							user_id: giveUser.user.id,
+							server_name: message.guild.name,
+							server_id: message.guild.id,
+							money: 0 + giveAmount,
+							last_daily: null
+						});
+						newUser.save();
+						fromUser.money = fromUser.money - giveAmount;
+						fromUser.save();
+						return message.channel.send(`You sent €${giveAmount} to ${giveUser.user.username}.`);
+					} else {
+						toUser.money = toUser.money + giveAmount;
+						toUser.save();
+						fromUser.money = fromUser.money - giveAmount;
+						fromUser.save();
+						return message.channel.send(`You sent €${giveAmount} to ${giveUser.user.username}.`);
+					}
+				});
+			}
+		});
 	} else if (args[0] === 'daily') {
 		const dailyAmount = generateDaily(300, 400);
 
