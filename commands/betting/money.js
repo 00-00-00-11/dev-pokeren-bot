@@ -90,8 +90,8 @@ module.exports.run = async (bot, message, args) => {
 				});
 			}
 		});
-	} else if (args[0] === 'daily') {
-		const dailyAmount = generateDaily(300, 400);
+	} else if (args[0] === 'collect' || args[0] === 'daily') {
+		const dailyAmount = generateDaily(200, 300);
 
 		Money.findOneAndUpdate({ user_id: message.author.id }, { new: true }, (err, money) => {
 			if (err) console.log(err);
