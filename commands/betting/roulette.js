@@ -71,7 +71,7 @@ module.exports.run = async (bot, message, args) => {
 			if (isNaN(betAmount)) return message.channel.send('Invalid bet amount.');
 			if (betAmount <= 0) return message.channel.send("Can't bet €0");
 			if (money.money == 0) return message.channel.send('You have €0. Use `!money daily` to get some.');
-			if (betAmount > 100) return message.channel.send('Max bet is €100!');
+			if (betAmount > 500) return message.channel.send('Max bet is €500!');
 			if (betAmount > money.money) return message.channel.send("Can't bet more than you've got!");
 
 			// Color bets
