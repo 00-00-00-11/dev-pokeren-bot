@@ -24,11 +24,11 @@ module.exports = (bot, message) => {
 		if (commandfile) commandfile.run(bot, message, args);
 
 		// Send commands used to event log server.
-		const g = bot.guilds.get(staffServer);
-		const ch = g.channels.get('543840893677993984');
-		if (message.guild.id !== mainServer) return;
+		// const g = bot.guilds.get(staffServer);
+		// const ch = g.channels.get('543840893677993984');
+		// if (message.guild.id !== mainServer) return;
 
-		ch.send(`**${message.author.tag}** used the command \`${message.content}\` in <#${message.channel.id}>`);
+		// ch.send(`**${message.author.tag}** used the command \`${message.content}\` in <#${message.channel.id}>`);
 	} else {
 		// Add users
 		DiscordUser.findOne(
