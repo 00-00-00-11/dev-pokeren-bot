@@ -2,6 +2,14 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const fs = require('fs');
 const bot = new Discord.Client({ disableEveryone: true });
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.MONGODB_URL, {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+  useUnifiedTopology: true
+});
 
 bot.commands = new Discord.Collection();
 

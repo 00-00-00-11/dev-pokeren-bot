@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const Money = require('../../models/betting/money');
 
-import { withCommas, capitalize } from '../../lib/helpers';
+const helpers = require('../../lib/helpers');
 
 module.exports.run = async (bot, message, args) => {
   if (message.channel.id !== '537750090677485598')
@@ -69,7 +69,7 @@ module.exports.run = async (bot, message, args) => {
 
       // Color bets
       if (validColors.includes(guessColor)) {
-        guessColor = capitalize(guessColor);
+        guessColor = helpers.capitalize(guessColor);
         const resultColor = roulette[rltNumber].color;
         const resultNumber = roulette[rltNumber].number;
         const winAmount = betAmount + betAmount; // 1:1
@@ -80,7 +80,7 @@ module.exports.run = async (bot, message, args) => {
             .addField(`Guess:`, `${guessColor}`, true)
             .addField(`Result:`, `${resultColor} ${resultNumber}`, true)
             .setTimestamp()
-            .setFooter(`You won €${withCommas(winAmount)}!`, `${playerIcon}`)
+            .setFooter(`You won €${helpers.withCommas(winAmount)}!`, `${playerIcon}`)
             .setColor('#00ff00');
 
           money.money = money.money - betAmount + winAmount;
@@ -92,7 +92,7 @@ module.exports.run = async (bot, message, args) => {
             .addField(`Guess:`, `${guessColor}`, true)
             .addField(`Result:`, `${resultColor} ${resultNumber}`, true)
             .setTimestamp()
-            .setFooter(`You lost €${withCommas(betAmount)}!`, `${playerIcon}`)
+            .setFooter(`You lost €${helpers.withCommas(betAmount)}!`, `${playerIcon}`)
             .setColor('#ff0000');
 
           money.money = money.money - betAmount;
@@ -117,7 +117,7 @@ module.exports.run = async (bot, message, args) => {
             .addField(`Guess:`, `${guessColor} ${guessNumber}`, true)
             .addField(`Result:`, `${resultColor} ${resultNumber}`, true)
             .setTimestamp()
-            .setFooter(`You won €${withCommas(winAmount)}!`, `${playerIcon}`)
+            .setFooter(`You won €${helpers.withCommas(winAmount)}!`, `${playerIcon}`)
             .setColor('#00ff00');
 
           money.money = money.money - betAmount + winAmount;
@@ -129,7 +129,7 @@ module.exports.run = async (bot, message, args) => {
             .addField(`Guess:`, `${guessColor} ${guessNumber}`, true)
             .addField(`Result:`, `${resultColor} ${resultNumber}`, true)
             .setTimestamp()
-            .setFooter(`You lost €${withCommas(betAmount)}!`, `${playerIcon}`)
+            .setFooter(`You lost €${helpers.withCommas(betAmount)}!`, `${playerIcon}`)
             .setColor('#ff0000');
 
           money.money = money.money - betAmount;

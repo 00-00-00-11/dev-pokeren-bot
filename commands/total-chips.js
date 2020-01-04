@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const Chipcount = require('../models/chipcount.js');
 const TournamentTitle = require('../models/tournamentTitle.js');
 
-import { withCommas } from '../lib/helpers';
+const helpers = require('../lib/helpers');
 
 module.exports.run = async (bot, message, args) => {
   let allChipcounts = [];
@@ -27,8 +27,8 @@ module.exports.run = async (bot, message, args) => {
           let totalChipsEmbed = new Discord.RichEmbed()
             .setTitle(`**${tTitle.title || message.guild.name}**`)
             .setColor('#00FF00')
-            .addField(`Total Chipcount`, `${withCommas(totalChips)}`)
-            .addField(`Current Chipleader`, `${res[0].name} - ${withCommas(res[0].chipcount)}`);
+            .addField(`Total Chipcount`, `${helpers.withCommas(totalChips)}`)
+            .addField(`Current Chipleader`, `${res[0].name} - ${helpers.withCommas(res[0].chipcount)}`);
 
           return message.channel.send(totalChipsEmbed);
         }

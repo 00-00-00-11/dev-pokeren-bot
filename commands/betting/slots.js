@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const Money = require('../../models/betting/money');
 
-import { withCommas } from '../../lib/helpers';
+const helpers = require('../../lib/helpers');
 
 module.exports.run = async (bot, message, args) => {
   if (message.channel.id !== '537750090677485598')
@@ -47,7 +47,7 @@ module.exports.run = async (bot, message, args) => {
           .setTitle(`🎰 Slot Machine 🎰`)
           .addField(`Result:`, `${slots[result1].icon} ${slots[result2].icon} ${slots[result3].icon}`, true)
           .setTimestamp()
-          .setFooter(`You won €${withCommas(amountWon)}!`, `${playerIcon}`)
+          .setFooter(`You won €${helpers.withCommas(amountWon)}!`, `${playerIcon}`)
           .setColor('#00ff00');
 
         money.money = money.money - amountBet + amountWon;
@@ -58,7 +58,7 @@ module.exports.run = async (bot, message, args) => {
           .setTitle(`🎰 Slot Machine 🎰`)
           .addField(`Result:`, `${slots[result1].icon} ${slots[result2].icon} ${slots[result3].icon}`, true)
           .setTimestamp()
-          .setFooter(`You lost €${withCommas(amountBet)}!`, `${playerIcon}`)
+          .setFooter(`You lost €${helpers.withCommas(amountBet)}!`, `${playerIcon}`)
           .setColor('#00ff00');
 
         money.money = money.money - amountBet;

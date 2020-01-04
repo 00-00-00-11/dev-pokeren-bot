@@ -3,7 +3,7 @@ const config = require('../config.json');
 const mongoose = require('mongoose');
 const mainServer = process.env.POKEREN_SERVER;
 
-import { withCommas } from '../lib/helpers';
+const helpers = require('../lib/helpers');
 
 module.exports.run = async (bot, message, args) => {
   const guildMembers = [];
@@ -64,6 +64,8 @@ module.exports.run = async (bot, message, args) => {
       return message.channel.send('No user found for given ID.');
     }
   } else {
+    if (!args[0]) return message.channel.send('Missing name or chipcount.');
+
     let chipcounter = args.pop();
     let namer;
     if (args.length >= 1) {
@@ -108,9 +110,9 @@ module.exports.run = async (bot, message, args) => {
                 timestamp: message.createdTimestamp
               });
               newChipcount.save();
-              message.channel.send(`Chipcount created with chipcount ${withCommas(chipcounter)}`);
+              message.channel.send(`Chipcount created with chipcount ${helpers.withCommas(chipcounter)}`);
             } else {
-              return message.channel.send(`Chipcount updated to ${withCommas(chipcount.chipcount)}`);
+              return message.channel.send(`Chipcount updated to ${helpers.withCommas(chipcount.chipcount)}`);
             }
           }
         );
@@ -132,7 +134,7 @@ module.exports.run = async (bot, message, args) => {
           newChipcount.save();
           message.channel.send(`Chipcount created.`);
         } else {
-          return message.channel.send(`Your chipcount is ${withCommas(chipcount.chipcount)}`);
+          return message.channel.send(`Your chipcount is ${helpers.withCommas(chipcount.chipcount)}`);
         }
       });
     }

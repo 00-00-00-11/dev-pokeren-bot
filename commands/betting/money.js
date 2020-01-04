@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Money = require('../../models/betting/money');
 const ms = require('parse-ms');
 
-import { withCommas } from '../../lib/helpers';
+const helpers = require('../../lib/helpers');
 
 function generateDaily(min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
@@ -31,7 +31,7 @@ module.exports.run = async (bot, message, args) => {
       (err, updated) => {
         if (err) console.log(err);
 
-        return message.channel.send(`Gave all users in database €${withCommas(givenAmount)}!`);
+        return message.channel.send(`Gave all users in database €${helpers.withCommas(givenAmount)}!`);
       }
     );
   } else if (args[0] === 'give') {
@@ -100,7 +100,7 @@ module.exports.run = async (bot, message, args) => {
           last_daily: message.createdTimestamp
         });
         newMoney.save();
-        return message.channel.send(`Money created with €${withCommas(dailyAmount)}.`);
+        return message.channel.send(`Money created with €${helpers.withCommas(dailyAmount)}.`);
       } else {
         const lastDaily = money.last_daily;
 
@@ -131,7 +131,7 @@ module.exports.run = async (bot, message, args) => {
         newMoney.save();
         message.channel.send(`Money created with €0. Use \`!money daily\` to get some.`);
       } else {
-        return message.channel.send(`You have €${withCommas(money.money)}.`);
+        return message.channel.send(`You have €${helpers.withCommas(money.money)}.`);
       }
     });
   }

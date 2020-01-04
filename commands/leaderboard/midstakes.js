@@ -3,7 +3,7 @@ const config = require('../../config.json');
 const Midstake = require('../../models/leaderboard/midstakes');
 const mongoose = require('mongoose');
 
-import { withCommas } from '../../lib/helpers';
+const helpers = require('../../lib/helpers');
 
 module.exports.run = async (bot, message, args) => {
   // Fix for double spaces in code.
@@ -73,12 +73,12 @@ module.exports.run = async (bot, message, args) => {
             if (member === 'Username not found') {
               midstakeEmbed.addField(
                 `${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
-                `**Date**: ${res[i].date_won} - **Winnings**: €${withCommas(res[i].winnings)}`
+                `**Date**: ${res[i].date_won} - **Winnings**: €${helpers.withCommas(res[i].winnings)}`
               );
             } else {
               midstakeEmbed.addField(
                 `${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
-                `**Date**: ${res[i].date_won} - **Winnings**: €${withCommas(res[i].winnings)}`
+                `**Date**: ${res[i].date_won} - **Winnings**: €${helpers.withCommas(res[i].winnings)}`
               );
             }
           }
@@ -89,12 +89,12 @@ module.exports.run = async (bot, message, args) => {
             if (member === 'Username not found') {
               midstakeEmbed.addField(
                 `${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
-                `**Date**: ${res[i].date_won} - **Winnings**: €${withCommas(res[i].winnings)}`
+                `**Date**: ${res[i].date_won} - **Winnings**: €${helpers.withCommas(res[i].winnings)}`
               );
             } else {
               midstakeEmbed.addField(
                 `${i + 1}. ${member} - ${res[i].tournament_name} - ${res[i].poker_client}`,
-                `**Date**: ${res[i].date_won} - **Winnings**: €${withCommas(res[i].winnings)}`
+                `**Date**: ${res[i].date_won} - **Winnings**: €${helpers.withCommas(res[i].winnings)}`
               );
             }
           }

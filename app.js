@@ -10,7 +10,8 @@ const port = process.env.PORT || 3000;
 mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useFindAndModify: false,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useUnifiedTopology: true
 });
 
 app.use(cors());

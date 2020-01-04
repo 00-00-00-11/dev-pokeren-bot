@@ -4,7 +4,7 @@ const Chipcount = require('../models/chipcount.js');
 const TournamentTitle = require('../models/tournamentTitle.js');
 const mongoose = require('mongoose');
 
-import { withCommas } from '../lib/helpers';
+const helpers = require('../lib/helpers');
 
 module.exports.run = async (bot, message, args) => {
   let newTitle;
@@ -90,9 +90,12 @@ module.exports.run = async (bot, message, args) => {
             for (let i = 0; i < res.length; i++) {
               let member = message.guild.members.get(res[i].user_id) || 'Username not found';
               if (member === 'Username not found') {
-                leveltopEmbed.addField(`${i + 1}. ${member}`, `**Chips**: ${withCommas(res[i].chipcount)}`);
+                leveltopEmbed.addField(`${i + 1}. ${member}`, `**Chips**: ${helpers.withCommas(res[i].chipcount)}`);
               } else {
-                leveltopEmbed.addField(`${i + 1}. ${res[i].name}`, `**Chips**: ${withCommas(res[i].chipcount)}`);
+                leveltopEmbed.addField(
+                  `${i + 1}. ${res[i].name}`,
+                  `**Chips**: ${helpers.withCommas(res[i].chipcount)}`
+                );
               }
             }
           } else if (res.length < 50) {
@@ -100,9 +103,9 @@ module.exports.run = async (bot, message, args) => {
             for (let i = 0; i < res.length; i++) {
               let member = message.guild.members.get(res[i].user_id) || 'Username not found';
               if (member === 'Username not found') {
-                ccArr.push(`${i + 1}. ${member} ${withCommas(res[i].chipcount)}`);
+                ccArr.push(`${i + 1}. ${member} ${helpers.withCommas(res[i].chipcount)}`);
               } else {
-                ccArr.push(`${i + 1}. ${res[i].name} ${withCommas(res[i].chipcount)}`);
+                ccArr.push(`${i + 1}. ${res[i].name} ${helpers.withCommas(res[i].chipcount)}`);
               }
             }
             leveltopEmbed.setDescription(ccArr);
@@ -111,9 +114,9 @@ module.exports.run = async (bot, message, args) => {
             for (let i = 0; i < 50; i++) {
               let member = message.guild.members.get(res[i].user_id) || 'Username not found';
               if (member === 'Username not found') {
-                ccArr.push(`${i + 1}. ${member} ${withCommas(res[i].chipcount)}`);
+                ccArr.push(`${i + 1}. ${member} ${helpers.withCommas(res[i].chipcount)}`);
               } else {
-                ccArr.push(`${i + 1}. ${res[i].name} ${withCommas(res[i].chipcount)}`);
+                ccArr.push(`${i + 1}. ${res[i].name} ${helpers.withCommas(res[i].chipcount)}`);
               }
             }
             ccArr.push('\u200b');
