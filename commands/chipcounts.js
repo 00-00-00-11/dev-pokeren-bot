@@ -2,16 +2,9 @@ const Discord = require('discord.js');
 const config = require('../config.json');
 const Chipcount = require('../models/chipcount.js');
 const TournamentTitle = require('../models/tournamentTitle.js');
-const fs = require('fs');
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true });
-
-function numberWithCommas(number) {
-  var parts = number.toString().split('.');
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return parts.join('.');
-}
+import { withCommas } from '../lib/helpers';
 
 module.exports.run = async (bot, message, args) => {
   let newTitle;
@@ -97,9 +90,9 @@ module.exports.run = async (bot, message, args) => {
             for (let i = 0; i < res.length; i++) {
               let member = message.guild.members.get(res[i].user_id) || 'Username not found';
               if (member === 'Username not found') {
-                leveltopEmbed.addField(`${i + 1}. ${member}`, `**Chips**: ${numberWithCommas(res[i].chipcount)}`);
+                leveltopEmbed.addField(`${i + 1}. ${member}`, `**Chips**: ${withCommas(res[i].chipcount)}`);
               } else {
-                leveltopEmbed.addField(`${i + 1}. ${res[i].name}`, `**Chips**: ${numberWithCommas(res[i].chipcount)}`);
+                leveltopEmbed.addField(`${i + 1}. ${res[i].name}`, `**Chips**: ${withCommas(res[i].chipcount)}`);
               }
             }
           } else if (res.length < 50) {
@@ -107,25 +100,25 @@ module.exports.run = async (bot, message, args) => {
             for (let i = 0; i < res.length; i++) {
               let member = message.guild.members.get(res[i].user_id) || 'Username not found';
               if (member === 'Username not found') {
-                ccArr.push(`${i + 1}. ${member} ${numberWithCommas(res[i].chipcount)}`);
-                leveltopEmbed.setDescription(ccArr);
+                ccArr.push(`${i + 1}. ${member} ${withCommas(res[i].chipcount)}`);
               } else {
-                ccArr.push(`${i + 1}. ${res[i].name} ${numberWithCommas(res[i].chipcount)}`);
-                leveltopEmbed.setDescription(ccArr);
+                ccArr.push(`${i + 1}. ${res[i].name} ${withCommas(res[i].chipcount)}`);
               }
             }
+            leveltopEmbed.setDescription(ccArr);
           } else {
             leveltopEmbed.setColor('#00FF00');
             for (let i = 0; i < 50; i++) {
               let member = message.guild.members.get(res[i].user_id) || 'Username not found';
               if (member === 'Username not found') {
-                ccArr.push(`${i + 1}. ${member} ${numberWithCommas(res[i].chipcount)}`);
-                leveltopEmbed.setDescription(ccArr);
+                ccArr.push(`${i + 1}. ${member} ${withCommas(res[i].chipcount)}`);
               } else {
-                ccArr.push(`${i + 1}. ${res[i].name} ${numberWithCommas(res[i].chipcount)}`);
-                leveltopEmbed.setDescription(ccArr);
+                ccArr.push(`${i + 1}. ${res[i].name} ${withCommas(res[i].chipcount)}`);
               }
             }
+            ccArr.push('\u200b');
+            ccArr.push(`Showing 50/${res.length} players`);
+            leveltopEmbed.setDescription(ccArr);
           }
 
           leveltopEmbed.setTimestamp();
